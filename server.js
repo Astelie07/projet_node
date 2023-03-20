@@ -1,4 +1,5 @@
 let express = require('express');
+let bodyparser=require('body-parser');
 let app=express();
 let port=3000;
 
@@ -7,6 +8,18 @@ app.use('/js',express.static(__dirname+'/node_modules/bootstrap/dist/js'));
 app.use('/js',express.static(__dirname+'/node_modules/jquey/dist'));
 app.use('/js',express.static(__dirname+'/node_modules/@popperjs/core/dist/umd'));
 app.use('/css',express.static(__dirname+'/node_modules/bootstrap/dist/css'));
+app.use('views',express.static(__dirname+'/views'));
+
+app.use(bodyparser.urlencoded({extended:false}));
+app.use(bodyparser.json());
+
+
+app.set("view engine","ejs");
+
+let monobjet={
+    nom:"Mon objet",
+    valeur:7
+}
 
 app.listen(port,()=>{
     console.log('Le serveur est en route');
@@ -14,7 +27,15 @@ app.listen(port,()=>{
 })
 
 app.get('/',(req,res,next)=>{
-    res.sendFile('/www/index.html');
+    res.render('index.ejs',{monobjet: monobjet});
+})
+
+app.get('/page2',(req,res,next)=>{
+    res.render('page2.ejs');
+})
+
+app.post('/page2',(req,res,next)=>{
+    console.log(req.body.name);
 })
 
 app.get('/accueil',(req,res,next)=>{
